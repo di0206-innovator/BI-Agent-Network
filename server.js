@@ -2437,6 +2437,15 @@ Respond ONLY with a valid JSON object matching this schema (do not wrap in markd
         }
     }
 
+    // ── Single-Page Application (SPA) Wildcard Fallback ──
+    app.get('*', (req, res, next) => {
+        if (req.path.startsWith('/api/')) return next();
+        const indexPath = path.join(__dirname, 'dist', 'index.html');
+        res.sendFile(indexPath, (err) => {
+            if (err) next();
+        });
+    });
+
     app.use((err, req, res, next) => {
         if (err && err.type === 'entity.too.large') {
             err = new HttpError(413, 'REQUEST_TOO_LARGE', 'Request body is too large.');
