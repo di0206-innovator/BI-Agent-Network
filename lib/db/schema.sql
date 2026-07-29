@@ -421,3 +421,43 @@ DO $$ BEGIN
             FOR EACH ROW EXECUTE FUNCTION _set_updated_at();
     END IF;
 END; $$;
+
+-- ─────────────────────────────────────────
+--  WAITLIST SIGNUPS
+-- ─────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS waitlist (
+    id              TEXT        PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
+    name            TEXT        NOT NULL,
+    email           TEXT        NOT NULL,
+    plan            TEXT        NOT NULL DEFAULT 'general',
+    message         TEXT        DEFAULT '',
+    status          TEXT        NOT NULL DEFAULT 'pending',
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS waitlist_email_idx ON waitlist (LOWER(email));
+
+-- ─────────────────────────────────────────
+--  WALKTHROUGH BOOKINGS
+-- ─────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS walkthrough_bookings (
+    id                 TEXT        PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
+    role               TEXT        NOT NULL DEFAULT 'founder',
+    name               TEXT        NOT NULL,
+    email              TEXT        NOT NULL,
+    phone              TEXT        DEFAULT '',
+    organization       TEXT        NOT NULL DEFAULT '',
+    website            TEXT        DEFAULT '',
+    stage              TEXT        DEFAULT '',
+    objectives         JSONB       DEFAULT '[]'::jsonb,
+    help_details       TEXT        DEFAULT '',
+    selected_date      TEXT        NOT NULL,
+    selected_time_slot TEXT        NOT NULL,
+    timezone           TEXT        NOT NULL DEFAULT 'EST',
+    meet_platform      TEXT        NOT NULL DEFAULT 'Google Meet',
+    status             TEXT        NOT NULL DEFAULT 'scheduled',
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS walkthrough_bookings_email_idx ON walkthrough_bookings (LOWER(email));
+

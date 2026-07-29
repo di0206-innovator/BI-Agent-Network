@@ -35,6 +35,7 @@ const { FileReportStore } = require('./lib/reportStore');
 const { FileSignalStore } = require('./lib/signalStore');
 const { PgStartupStore, FileStartupStore, getMatchedSchemes } = require('./lib/startupStore');
 const { FileWaitlistStore } = require('./lib/waitlistStore');
+const { FileWalkthroughStore } = require('./lib/walkthroughStore');
 const { getWritableDataDir, getWritableDataPath } = require('./lib/runtimePaths');
 const { getSupabaseAdmin } = require('./lib/supabaseServer');
 
@@ -347,6 +348,7 @@ function createApp(options = {}) {
     }
 
     const waitlistStore = options.waitlistStore || new FileWaitlistStore();
+    const walkthroughStore = options.walkthroughStore || new FileWalkthroughStore();
 
     const auth = createAuthMiddleware({ token: appConfig.apiAuthToken, authService });
     const optionalAuth = createOptionalAuthMiddleware({ token: appConfig.apiAuthToken, authService });
@@ -455,6 +457,10 @@ function createApp(options = {}) {
             }
         }
     }));
+
+    app.get('/health', (req, res) => {
+        res.status(200).json({ status: 'ok', timestamp: new Date().toISOString(), workerId: process.pid });
+    });
 
     app.get('/api/health', (req, res) => {
         res.json({
@@ -847,6 +853,38 @@ function createApp(options = {}) {
             logger.info(`Waitlist signup: ${record.email} (${record.plan})`);
             broadcastEvent('waitlist_signup', { name: record.name, plan: record.plan });
             res.status(201).json({ ok: true, id: record.id });
+        } catch (error) {
+            next(error);
+        }
+    });
+
+    // ── Walkthrough Booking API ──────────────────────────────────────
+    const walkthroughLimiter = buildLimiter(60_000 * 5, 5); // 5 requests per 5 minutes per IP
+
+    app.post('/api/walkthrough', walkthroughLimiter, async (req, res, next) => {
+        try {
+            const { name, email, role, phone, organization, website, stage, objectives, helpDetails, selectedDate, selectedTimeSlot, timezone, meetPlatform } = req.body || {};
+            if (!email || typeof email !== 'string' || !email.includes('@')) {
+                throw new HttpError(400, 'INVALID_EMAIL', 'A valid email address is required.');
+            }
+            if (!name || typeof name !== 'string' || name.trim().length < 1) {
+                throw new HttpError(400, 'INVALID_NAME', 'Name is required.');
+            }
+            const record = await walkthroughStore.add({
+                name, email, role, phone, organization, website, stage, objectives, helpDetails, selectedDate, selectedTimeSlot, timezone, meetPlatform
+            });
+            logger.info(`Walkthrough scheduled: ${record.email} (${record.role}) on ${record.selectedDate} at ${record.selectedTimeSlot}`);
+            broadcastEvent('walkthrough_booking', { name: record.name, role: record.role, organization: record.organization, date: record.selectedDate, time: record.selectedTimeSlot });
+            res.status(201).json({ ok: true, id: record.id, record });
+        } catch (error) {
+            next(error);
+        }
+    });
+
+    app.get('/api/admin/walkthroughs', auth, requireAdmin, async (req, res, next) => {
+        try {
+            const entries = await walkthroughStore.readAll();
+            res.json({ requestId: req.id, entries });
         } catch (error) {
             next(error);
         }

@@ -30,6 +30,7 @@ const Privacy = lazy(() => import('./pages/marketing/Privacy'));
 const Terms = lazy(() => import('./pages/marketing/Terms'));
 const About = lazy(() => import('./pages/marketing/About'));
 const Upgrade = lazy(() => import('./pages/marketing/Upgrade'));
+const BookWalkthrough = lazy(() => import('./pages/marketing/BookWalkthrough'));
 
 // Fallback spinner for lazy-loaded pages
 const PageFallback = () => (
@@ -438,6 +439,7 @@ function AppContent({
   <Route path="/terms" element={<Terms />} />
   <Route path="/about" element={<About />} />
   <Route path="/upgrade" element={<Upgrade />} />
+  <Route path="/walkthrough" element={<BookWalkthrough />} />
 
   {/* Wildcard Fallback */}
   <Route path="*" element={<Navigate to="/" replace />} />
@@ -515,6 +517,14 @@ function getSeoForPath(pathname) {
       ...defaults,
       title: 'Upgrade — Premium Plans Coming Soon | Stratify',
       description: 'Premium features are rolling out soon. Join the waitlist to be first in line for advanced AI capabilities, investor data rooms, and more.',
+    };
+  }
+
+  if (pathname === '/walkthrough') {
+    return {
+      ...defaults,
+      title: 'Book a Walkthrough | Stratify Executive Demo',
+      description: 'Schedule a 1-on-1 live walkthrough of Stratify with a lead executive over Google Meet. Tailored for founders, VCs, angels, and institutions.',
     };
   }
 

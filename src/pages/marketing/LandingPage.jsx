@@ -3,6 +3,8 @@ import { ArrowRight, ArrowUpRight, Check, Network, Radio, Brain, FileText, Dolla
 import { Link, useNavigate } from 'react-router-dom';
 import StartupGraph from '../../components/StartupGraph';
 import Footer from '../../components/Footer';
+import InteractiveSandbox from '../../components/marketing/InteractiveSandbox';
+import RoiCalculator from '../../components/marketing/RoiCalculator';
 
 export default function LandingPage({ openAuthModal, user, theme, setTheme }) {
   const navigate = useNavigate();
@@ -62,6 +64,12 @@ export default function LandingPage({ openAuthModal, user, theme, setTheme }) {
               </Link>
             ) : (
               <>
+                <Link
+                  to="/walkthrough"
+                  className="px-4 py-2 bg-accent/15 border border-accent/40 text-text-primary text-xs font-outfit font-bold uppercase tracking-wider rounded-lg hover:bg-accent hover:text-[#111] transition-all hidden sm:inline-flex items-center gap-1.5"
+                >
+                  Book Walkthrough
+                </Link>
                 <button
                   onClick={openAuthModal}
                   className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors hidden sm:block"
@@ -124,12 +132,12 @@ export default function LandingPage({ openAuthModal, user, theme, setTheme }) {
                 <ArrowRight size={16} />
                 {user ? 'Enter Dashboard' : 'Start building'}
               </button>
-              <a
-                href="#system"
+              <Link
+                to="/walkthrough"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-card text-text-primary text-sm font-semibold rounded-lg border border-DEFAULT hover:border-text-primary transition-colors"
               >
                 Book a walkthrough
-              </a>
+              </Link>
             </div>
 
             {/* Stats strip */}
@@ -175,6 +183,14 @@ export default function LandingPage({ openAuthModal, user, theme, setTheme }) {
             </div>
           </div>
         </div>
+      </section>
+
+
+      {/* ════════════════════════════════════════════════════════════
+          SECTION 3.5: Live Product Sandbox
+          ════════════════════════════════════════════════════════════ */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
+        <InteractiveSandbox />
       </section>
 
 
@@ -391,6 +407,14 @@ export default function LandingPage({ openAuthModal, user, theme, setTheme }) {
             </div>
           </div>
         </div>
+      </section>
+
+
+      {/* ════════════════════════════════════════════════════════════
+          SECTION 7.2: ROI & Savings Calculator
+          ════════════════════════════════════════════════════════════ */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+        <RoiCalculator />
       </section>
 
 

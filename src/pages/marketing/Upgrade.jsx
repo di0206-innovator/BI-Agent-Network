@@ -209,6 +209,22 @@ export default function Upgrade() {
               </p>
             </div>
           )}
+
+          {/* Book Walkthrough Executive Banner */}
+          <div className="mt-10 bg-canvas border border-DEFAULT rounded-2xl p-6 text-center">
+            <h3 className="font-outfit font-black text-lg text-text-primary mb-2">
+              Need a Custom Enterprise Walkthrough Right Away?
+            </h3>
+            <p className="text-xs text-text-muted max-w-md mx-auto mb-4">
+              Schedule a 1-on-1 live call with a Stratify Lead Executive to get early preview access and custom team onboarding.
+            </p>
+            <Link
+              to="/walkthrough"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-accent text-[#111] text-xs font-outfit font-black uppercase tracking-wider rounded-xl hover:opacity-90 transition-all cursor-pointer"
+            >
+              <Sparkles size={14} /> Book Executive Walkthrough
+            </Link>
+          </div>
         </div>
 
       </div>

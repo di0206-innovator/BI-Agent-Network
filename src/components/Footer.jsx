@@ -16,6 +16,7 @@ const footerLinks = {
   ],
   Company: [
     { label: 'About', href: '/about' },
+    { label: 'Book Walkthrough', href: '/walkthrough' },
     { label: 'Privacy', href: '/privacy' },
     { label: 'Terms', href: '/terms' },
     { label: 'Contact', href: 'mailto:hello@stratify.co' },

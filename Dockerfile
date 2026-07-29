@@ -60,6 +60,10 @@ VOLUME ["/app/data"]
 
 USER stratify
 
+# Healthcheck for containers & orchestration engines
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
+
 # Use cluster.js so all CPU cores are used in the container.
 # Set WORKERS=1 in Kubernetes (let the orchestrator handle replicas).
 CMD ["node", "cluster.js"]

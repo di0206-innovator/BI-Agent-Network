@@ -289,6 +289,15 @@ export default function Navbar({ founderProfile, user, setUser, openAuthModal, t
 
         {/* Theme Toggle & Profile & Auth Status */}
         <div className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:flex w-full md:w-auto items-center justify-between md:justify-end gap-3 flex-shrink-0 order-4 md:order-none relative`}>
+          {/* Walkthrough CTA Button */}
+          <Link
+            to="/walkthrough"
+            className="px-3 py-1.5 bg-accent/15 border border-accent/40 text-text-primary text-xs font-outfit font-bold uppercase tracking-wider rounded-lg hover:bg-accent hover:text-[#111] transition-all flex items-center gap-1.5"
+          >
+            <Calendar size={13} className="text-accent hover:text-[#111]" />
+            <span className="hidden sm:inline">Book</span> Walkthrough
+          </Link>
+
           {/* Theme Toggle */}
           <button
             type="button"
