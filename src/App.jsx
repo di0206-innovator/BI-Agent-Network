@@ -3,7 +3,19 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import Navbar from './components/Navbar';
 import BetaBanner from './components/BetaBanner';
 import AuthModal from './components/AuthModal';
-import Seo from './components/Seo';
+import Privacy from './pages/marketing/Privacy';
+import Terms from './pages/marketing/Terms';
+import About from './pages/marketing/About';
+import Upgrade from './pages/marketing/Upgrade';
+import BookWalkthrough from './pages/marketing/BookWalkthrough';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
 import RealtimeTicker from './components/RealtimeTicker';
 import { supabase } from './lib/supabase';
 
@@ -26,11 +38,6 @@ const Opportunities = lazy(() => import('./pages/ecosystem/Opportunities'));
 const Explore = lazy(() => import('./pages/ecosystem/Explore'));
 const FounderMemory = lazy(() => import('./pages/tools/FounderMemory'));
 const Settings = lazy(() => import('./pages/core/Settings'));
-const Privacy = lazy(() => import('./pages/marketing/Privacy'));
-const Terms = lazy(() => import('./pages/marketing/Terms'));
-const About = lazy(() => import('./pages/marketing/About'));
-const Upgrade = lazy(() => import('./pages/marketing/Upgrade'));
-const BookWalkthrough = lazy(() => import('./pages/marketing/BookWalkthrough'));
 
 // Fallback spinner for lazy-loaded pages
 const PageFallback = () => (
@@ -265,7 +272,13 @@ function AppContent({
  theme, setTheme, openAuthModal, isAdmin, hydrateUser
 }) {
  const location = useLocation();
- const isPublicRoute = location.pathname === '/' || location.pathname.startsWith('/brief/') || location.pathname === '/upgrade';
+ const PUBLIC_PATHS = [
+    '/', '/walkthrough', '/book-walkthrough', '/demo', '/walkthrough-demo', '/book', 
+    '/schedule-walkthrough', '/upgrade', '/privacy', '/terms', '/about', 
+    '/runway', '/equity', '/bounties', '/explore', '/feed', '/opportunities', 
+    '/timeline', '/memory'
+  ];
+  const isPublicRoute = PUBLIC_PATHS.includes(location.pathname) || location.pathname.startsWith('/brief/');
  const seo = getSeoForPath(location.pathname);
 
   // Only redirect unauthenticated users from private routes
@@ -284,6 +297,7 @@ function AppContent({
 
  return (
  <>
+ <ScrollToTop />
  <Seo {...seo} path={location.pathname} />
  <a
    href="#main-content"
@@ -440,6 +454,11 @@ function AppContent({
   <Route path="/about" element={<About />} />
   <Route path="/upgrade" element={<Upgrade />} />
   <Route path="/walkthrough" element={<BookWalkthrough />} />
+  <Route path="/book-walkthrough" element={<BookWalkthrough />} />
+  <Route path="/demo" element={<BookWalkthrough />} />
+  <Route path="/walkthrough-demo" element={<BookWalkthrough />} />
+  <Route path="/book" element={<BookWalkthrough />} />
+  <Route path="/schedule-walkthrough" element={<BookWalkthrough />} />
 
   {/* Wildcard Fallback */}
   <Route path="*" element={<Navigate to="/" replace />} />
