@@ -3,11 +3,14 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import Navbar from './components/Navbar';
 import BetaBanner from './components/BetaBanner';
 import AuthModal from './components/AuthModal';
+import RealtimeTicker from './components/RealtimeTicker';
+import Seo from './components/Seo';
 import Privacy from './pages/marketing/Privacy';
 import Terms from './pages/marketing/Terms';
 import About from './pages/marketing/About';
 import Upgrade from './pages/marketing/Upgrade';
 import BookWalkthrough from './pages/marketing/BookWalkthrough';
+import { supabase } from './lib/supabase';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -16,8 +19,6 @@ function ScrollToTop() {
   }, [pathname]);
   return null;
 }
-import RealtimeTicker from './components/RealtimeTicker';
-import { supabase } from './lib/supabase';
 
 // Lazy load pages for maximum efficiency and modular bundle sizes
 const Onboarding = lazy(() => import('./pages/core/Onboarding'));
