@@ -10,6 +10,7 @@ import Terms from './pages/marketing/Terms';
 import About from './pages/marketing/About';
 import Upgrade from './pages/marketing/Upgrade';
 import BookWalkthrough from './pages/marketing/BookWalkthrough';
+import CommandPalette from './components/CommandPalette';
 import { supabase } from './lib/supabase';
 
 function ScrollToTop() {
@@ -268,19 +269,39 @@ export default function App() {
 }
 
 function AppContent({
- founderProfile, setFounderProfile, currentReport, setCurrentReport,
- user, setUser, isAuthModalOpen, setIsAuthModalOpen,
- theme, setTheme, openAuthModal, isAdmin, hydrateUser
+  founderProfile, setFounderProfile, currentReport, setCurrentReport,
+  user, setUser, isAuthModalOpen, setIsAuthModalOpen,
+  theme, setTheme, openAuthModal, isAdmin, hydrateUser
 }) {
- const location = useLocation();
- const PUBLIC_PATHS = [
+  const location = useLocation();
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpen = () => setIsCommandPaletteOpen(true);
+    window.addEventListener('open-command-palette', handleOpen);
+
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('open-command-palette', handleOpen);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  const PUBLIC_PATHS = [
     '/', '/walkthrough', '/book-walkthrough', '/demo', '/walkthrough-demo', '/book', 
     '/schedule-walkthrough', '/upgrade', '/privacy', '/terms', '/about', 
     '/runway', '/equity', '/bounties', '/explore', '/feed', '/opportunities', 
     '/timeline', '/memory'
   ];
   const isPublicRoute = PUBLIC_PATHS.includes(location.pathname) || location.pathname.startsWith('/brief/');
- const seo = getSeoForPath(location.pathname);
+  const seo = getSeoForPath(location.pathname);
 
   // Only redirect unauthenticated users from private routes
   const isOnboardingRoute = location.pathname === '/onboarding';
@@ -484,6 +505,12 @@ function AppContent({
  isOpen={isAuthModalOpen} 
  onClose={() => setIsAuthModalOpen(false)} 
  onAuthSuccess={hydrateUser} 
+ />
+
+ {/* Global Command Palette (Cmd+K) */}
+ <CommandPalette 
+ isOpen={isCommandPaletteOpen} 
+ onClose={() => setIsCommandPaletteOpen(false)} 
  />
  </>
 );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Radio, FileText, UserCog, TrendingUp, Shield, Users, Cpu, Settings, Calendar, BrainCircuit, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, Radio, FileText, UserCog, TrendingUp, Shield, Users, Cpu, Settings, Calendar, BrainCircuit, Sun, Moon, Search } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { supabase } from '../lib/supabase';
 
@@ -291,7 +291,18 @@ export default function Navbar({ founderProfile, user, setUser, openAuthModal, t
         </nav>
 
         {/* Theme Toggle & Profile & Auth Status */}
-        <div className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:flex w-full md:w-auto items-center justify-between md:justify-end gap-3 flex-shrink-0 order-4 md:order-none relative`}>
+        <div className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:flex w-full md:w-auto items-center justify-between md:justify-end gap-2.5 flex-shrink-0 order-4 md:order-none relative`}>
+          {/* Cmd+K Search Pill */}
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent('open-command-palette'))}
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-DEFAULT bg-card hover:bg-hover transition-all cursor-pointer text-text-secondary hover:text-text-primary text-xs font-semibold select-none shadow-sm"
+          >
+            <Search size={13} className="text-text-muted" />
+            <span>Search...</span>
+            <kbd className="font-mono text-[9px] bg-canvas border border-light px-1 rounded text-text-muted">⌘K</kbd>
+          </button>
+
           {/* Walkthrough CTA Button */}
           <Link
             to="/walkthrough"
