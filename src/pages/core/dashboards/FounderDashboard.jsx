@@ -103,35 +103,45 @@ export default function FounderDashboard({ founderProfile, user, openAuthModal, 
         </div>
       </div>
 
-      {/* Stats Metric Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 select-none">
-        <div className="os-card bg-card p-6 flex items-center justify-between shadow-sm">
+      {/* Stats Metric Strip & Health Radar */}
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 select-none">
+        <div className="os-card bg-card p-5 flex items-center justify-between shadow-sm">
           <div>
             <p className="text-[10px] font-black uppercase text-text-muted tracking-wider mb-1">Stratify Validation Score</p>
-            <h3 className="text-3xl font-outfit font-black text-text-primary">{myStartup?.score || founderProfile.score || 10} <span className="text-xs text-text-muted font-light">/ 100</span></h3>
+            <h3 className="text-3xl font-outfit font-black text-text-primary">{myStartup?.score || founderProfile.score || 78} <span className="text-xs text-text-muted font-light">/ 100</span></h3>
           </div>
-          <div className="w-10 h-10 rounded-full bg-accent/10 border border-[#C8E64A]/30 flex items-center justify-center text-text-primary">
+          <div className="w-9 h-9 rounded-full bg-accent/15 border border-[#C8E64A]/30 flex items-center justify-center text-text-primary">
             <Target size={18} />
           </div>
         </div>
 
-        <div className="os-card bg-card p-6 flex items-center justify-between shadow-sm">
-          <div>
-            <p className="text-[10px] font-black uppercase text-text-muted tracking-wider mb-1">Active Bounties</p>
-            <h3 className="text-3xl font-outfit font-black text-text-primary">2 <span className="text-xs text-text-muted font-light">Tasks</span></h3>
+        <div className="os-card bg-card p-5 flex flex-col justify-between shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-black uppercase text-text-muted tracking-wider">Execution Readiness</span>
+            <span className="text-xs font-bold text-text-primary">{myStartup?.execution_readiness || 85}%</span>
           </div>
-          <div className="w-10 h-10 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-500">
-            <Zap size={18} />
+          <div className="w-full bg-hover h-2 rounded-full overflow-hidden mt-2">
+            <div className="bg-accent h-full rounded-full" style={{ width: `${myStartup?.execution_readiness || 85}%` }}></div>
           </div>
         </div>
 
-        <div className="os-card bg-card p-6 flex items-center justify-between shadow-sm">
-          <div>
-            <p className="text-[10px] font-black uppercase text-text-muted tracking-wider mb-1">Logged Memories</p>
-            <h3 className="text-3xl font-outfit font-black text-text-primary">{decisionsCount} <span className="text-xs text-text-muted font-light">Pivots</span></h3>
+        <div className="os-card bg-card p-5 flex flex-col justify-between shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-black uppercase text-text-muted tracking-wider">Fundraising Readiness</span>
+            <span className="text-xs font-bold text-text-primary">{myStartup?.fundraising_readiness || 72}%</span>
           </div>
-          <div className="w-10 h-10 rounded-full bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600">
-            <BookOpen size={18} />
+          <div className="w-full bg-hover h-2 rounded-full overflow-hidden mt-2">
+            <div className="bg-blue-500 h-full rounded-full" style={{ width: `${myStartup?.fundraising_readiness || 72}%` }}></div>
+          </div>
+        </div>
+
+        <div className="os-card bg-card p-5 flex flex-col justify-between shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-black uppercase text-text-muted tracking-wider">Founder-Market Fit</span>
+            <span className="text-xs font-bold text-text-primary">{myStartup?.founder_market_fit || 90}%</span>
+          </div>
+          <div className="w-full bg-hover h-2 rounded-full overflow-hidden mt-2">
+            <div className="bg-purple-500 h-full rounded-full" style={{ width: `${myStartup?.founder_market_fit || 90}%` }}></div>
           </div>
         </div>
       </div>
@@ -144,14 +154,29 @@ export default function FounderDashboard({ founderProfile, user, openAuthModal, 
             <div className="absolute top-0 right-0 p-4 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 transition-transform duration-500">
               <Zap size={120} />
             </div>
-            <div className="relative z-10">
-              <h3 className="font-outfit font-bold text-lg mb-1.5 text-white">Intelligence Agent</h3>
-              <p className="text-text-muted text-xs mb-6 max-w-[200px] leading-relaxed">
-                Generate reports, validate hypotheses, or analyze competitors instantly.
+            <div className="relative z-10 space-y-3">
+              <span className="px-2 py-0.5 bg-accent text-[#111] font-outfit font-black text-[9px] uppercase tracking-wider rounded">
+                AI Chief of Staff Active
+              </span>
+              <h3 className="font-outfit font-bold text-lg text-white">Autonomous Founder Copilot</h3>
+              <p className="text-text-muted text-xs leading-relaxed">
+                Background agents continuously monitoring market shifts, competitor movements, and burn runway.
               </p>
-              <Link to="/intelligence" className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-[#111] font-semibold text-xs rounded hover:bg-accent-hover transition-colors shadow-sm">
-                Open Workspace <ArrowRight size={14} />
-              </Link>
+              <div className="space-y-1.5 pt-1">
+                {[
+                  '💡 Audit Defensible Product Wedge',
+                  '📊 Simulate 12-Month Runway Scenario',
+                  '👀 Run Competitor Watch Sweep',
+                ].map((action, i) => (
+                  <Link
+                    key={i}
+                    to="/intelligence"
+                    className="block p-2 bg-card/10 hover:bg-card/20 rounded-lg text-xs font-semibold text-white/90 hover:text-white transition-colors border border-white/10"
+                  >
+                    {action}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
 

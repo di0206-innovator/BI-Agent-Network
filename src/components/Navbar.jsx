@@ -49,18 +49,23 @@ export default function Navbar({ founderProfile, user, setUser, openAuthModal, t
   const getNavItems = () => {
     const role = founderProfile?.role || 'founder';
     
-    // Core nav items
+    // Ecosystem Information Architecture:
+    // Workspace -> Startup -> Community -> Intelligence -> Capital -> Network
     const core = [
-      { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { path: '/explore', label: 'Explore', icon: Users },
+      { path: '/dashboard', label: 'Workspace', icon: LayoutDashboard },
+      { path: '/explore', label: 'Startup Graph', icon: Users },
+      { path: '/feed', label: 'Community', icon: Radio },
+      { path: '/intelligence', label: 'Intelligence', icon: FileText },
     ];
-    
-    if (role === 'founder' || role === 'vc' || role === 'institution') {
-      core.push({ path: '/intelligence', label: 'Insights & Briefs', icon: FileText });
+
+    if (role === 'founder') {
+      core.push({ path: '/opportunities', label: 'Capital & Grants', icon: UserCog });
+    } else if (role === 'vc' || role === 'angel') {
+      core.push({ path: '/signals', label: 'Deal Signals', icon: TrendingUp });
+    } else {
+      core.push({ path: '/opportunities', label: 'Programs & Grants', icon: UserCog });
     }
-    
-    core.push({ path: '/feed', label: 'Feed', icon: Radio });
-    
+
     if (isAdmin) {
       core.push({ path: '/admin', label: 'Admin Console', icon: Shield });
     }
@@ -73,37 +78,35 @@ export default function Navbar({ founderProfile, user, setUser, openAuthModal, t
     return [
       { path: '/runway', label: 'Runway Planner', icon: TrendingUp },
       { path: '/equity', label: 'Cap Table', icon: Users },
-      { path: '/bounties', label: 'Bounties', icon: Cpu },
-      { path: '/opportunities', label: 'Opportunities', icon: UserCog },
-      { path: '/timeline', label: 'Timeline', icon: Calendar },
+      { path: '/bounties', label: 'Bounty Board', icon: Cpu },
+      { path: '/timeline', label: 'Milestone Timeline', icon: Calendar },
       { path: '/memory', label: 'Founder Memory', icon: BrainCircuit },
     ];
   };
 
   const getIntelItems = () => {
     const role = founderProfile?.role || 'founder';
-    // Always include the intelligence workspace
     const base = [
-      { path: '/intelligence', label: 'Insights & Briefs', icon: FileText },
-      { path: '/signals', label: 'Market Signals', icon: Radio },
+      { path: '/intelligence', label: 'Strategic Reports & Briefs', icon: FileText },
+      { path: '/signals', label: 'Ecosystem Intelligence', icon: Radio },
     ];
     if (role === 'institution' || role === 'government') {
       return [
         ...base,
         { path: '/opportunities', label: 'Programs & Grants', icon: UserCog },
-        { path: '/timeline', label: 'Timeline', icon: TrendingUp },
+        { path: '/timeline', label: 'Ecosystem Timeline', icon: TrendingUp },
       ];
     }
-    if (role === 'vc') {
+    if (role === 'vc' || role === 'angel') {
       return [
         ...base,
-        { path: '/timeline', label: 'Timeline', icon: TrendingUp },
+        { path: '/timeline', label: 'Deal Flow Timeline', icon: TrendingUp },
       ];
     }
     return [
       ...base,
-      { path: '/memory', label: 'Memory', icon: Cpu },
-      { path: '/timeline', label: 'Timeline', icon: TrendingUp },
+      { path: '/memory', label: 'Hypothesis Memory', icon: Cpu },
+      { path: '/timeline', label: 'Milestone Timeline', icon: TrendingUp },
     ];
   };
 

@@ -104,15 +104,12 @@ export default function LandingPage({ openAuthModal, user, theme, setTheme }) {
             </div>
 
             {/* Headline */}
-            <h1 className="font-outfit font-black text-[2.75rem] md:text-[3.5rem] lg:text-[4rem] leading-[1.05] tracking-[-0.03em] text-text-primary mb-6">
-              Every decision,{' '}
-              <br className="hidden sm:block" />
-              connected to the{' '}
-              <br className="hidden sm:block" />
-              <span className="relative inline-block">
-                startup graph
-                <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 300 8" preserveAspectRatio="none">
-                  <path d="M0 6 Q75 0 150 6 Q225 12 300 6" stroke="var(--accent)" strokeWidth="3" fill="none" strokeLinecap="round" />
+            <h1 className="font-outfit font-black text-[2.5rem] sm:text-[3.25rem] md:text-[3.75rem] lg:text-[4.25rem] leading-[1.05] tracking-[-0.03em] text-text-primary mb-6 uppercase">
+              The Operating System for the{' '}
+              <span className="relative inline-block text-text-primary">
+                Startup Economy
+                <svg className="absolute -bottom-1.5 left-0 w-full" viewBox="0 0 300 8" preserveAspectRatio="none">
+                  <path d="M0 6 Q75 0 150 6 Q225 12 300 6" stroke="var(--accent)" strokeWidth="4" fill="none" strokeLinecap="round" />
                 </svg>
               </span>
               .
@@ -120,7 +117,7 @@ export default function LandingPage({ openAuthModal, user, theme, setTheme }) {
 
             {/* Subtitle */}
             <p className="text-base md:text-lg text-text-muted leading-relaxed max-w-lg mb-10">
-              Stratify is a founder OS where milestones, memory, signals, and capital all attach to one living graph — built for founders, investors, and the institutions that back them.
+              Stratify connects founders, investors, angels, and institutions into a unified startup graph — powering background AI intelligence, capital flow, and execution proof-of-work.
             </p>
 
             {/* CTAs */}

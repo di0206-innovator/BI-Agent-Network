@@ -43,8 +43,16 @@ const ROLES = [
   {
     id: 'vc',
     icon: Landmark,
-    label: 'VC / Investor',
+    label: 'VC / Institutional Investor',
     desc: 'Source deal flow, track thesis alignment, analyze startup risks, and manage watchlists.',
+    ring: 'ring-2 ring-black border-black bg-card',
+    iconBg: 'bg-accent/20 text-text-primary',
+  },
+  {
+    id: 'angel',
+    icon: Sparkles,
+    label: 'Angel Investor / Mentor',
+    desc: 'Discover student founders, pre-seed innovation, regional syndicates, and early traction startups.',
     ring: 'ring-2 ring-black border-black bg-card',
     iconBg: 'bg-accent/20 text-text-primary',
   },
@@ -104,13 +112,13 @@ export default function Onboarding({ founderProfile, setFounderProfile }) {
         budget: formData.budget || 'Bootstrapped',
         timeline: formData.timeline || '30 days',
         currentGoal: formData.currentGoal || 'validate idea'
-      } : role === 'vc' ? {
-        name: formData.firmName || 'Venture Partners',
+      } : role === 'vc' || role === 'angel' ? {
+        name: formData.firmName || (role === 'angel' ? 'Angel Syndicate Member' : 'Venture Partners'),
         geography: formData.geography || 'Global',
         industry: formData.sectors || 'AI, SaaS',
-        ticketSize: formData.ticketSize || '$250k - $1M',
-        investmentStage: formData.investmentStage || 'seed',
-        thesis: formData.thesis || 'Investing in early-stage builders',
+        ticketSize: formData.ticketSize || '$25k - $250k',
+        investmentStage: formData.investmentStage || 'pre_seed',
+        thesis: formData.thesis || 'Supporting early stage founders and local innovation',
         intent: formData.investmentIntent
       } : {
         name: formData.orgName || 'Ecosystem Support Agency',
@@ -257,7 +265,8 @@ export default function Onboarding({ founderProfile, setFounderProfile }) {
                   <div>
                     <h2 className="text-xl font-outfit font-bold text-text-primary leading-tight">
                       {role === 'founder' && 'Startup Context Registry'}
-                      {role === 'vc' && 'Investor Thesis Registry'}
+                      {role === 'vc' && 'VC Thesis Registry'}
+                      {role === 'angel' && 'Angel Discovery Registry'}
                       {role === 'institution' && 'Institutional Mandate Registry'}
                     </h2>
                     <p className="text-xs text-text-muted font-semibold mt-0.5">
@@ -297,8 +306,8 @@ export default function Onboarding({ founderProfile, setFounderProfile }) {
                   </div>
                 )}
 
-                {/* ── VC FIELDS ── */}
-                {role === 'vc' && (
+                {/* ── VC / ANGEL FIELDS ── */}
+                {(role === 'vc' || role === 'angel') && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <Field label="VC Firm / Fund Name" name="firmName" value={formData.firmName} onChange={handleChange} placeholder="e.g. Sequoia India, Accel" required />
                     <Field label="Geography Focus" name="geography" value={formData.geography} onChange={handleChange} placeholder="e.g. India, South-East Asia, US" required />

@@ -6,27 +6,27 @@ import React from 'react';
  * the landing page and in the "How it compounds" section.
  */
 export default function StartupGraph({ className = '' }) {
-  // Node definitions
+  // Node definitions representing full ecosystem relationships (Audit Section 8)
   const nodes = [
-    { id: 'center', x: 300, y: 250, r: 24, fill: '#1A1A1A', label: null },
-    { id: 'seed', x: 160, y: 120, r: 8, fill: '#E5E7EB', label: 'Seed +$2.4M', labelX: -10, labelY: -14 },
-    { id: 'pricing', x: 440, y: 100, r: 14, fill: '#C8E64A', label: 'Pricing', labelX: 0, labelY: -20 },
-    { id: 'atlas', x: 360, y: 340, r: 8, fill: '#E5E7EB', label: 'Atlas Freight', labelX: 0, labelY: 18 },
-    { id: 'meridian', x: 460, y: 300, r: 8, fill: '#E5E7EB', label: 'Meridian pilot', labelX: 10, labelY: 18 },
-    { id: 'churn', x: 130, y: 320, r: 14, fill: '#C8E64A', label: 'SMB churn', labelX: -10, labelY: 20 },
-    { id: 'n1', x: 240, y: 160, r: 6, fill: '#E5E7EB', label: null },
-    { id: 'n2', x: 480, y: 220, r: 6, fill: '#E5E7EB', label: null },
-    { id: 'n3', x: 190, y: 260, r: 5, fill: '#E5E7EB', label: null },
+    { id: 'startup', x: 300, y: 220, r: 24, fill: '#1A1A1A', label: 'STARTUP', labelX: 0, labelY: 38 },
+    { id: 'founder', x: 160, y: 110, r: 12, fill: '#C8E64A', label: 'Founder', labelX: 0, labelY: -18 },
+    { id: 'funding', x: 440, y: 100, r: 12, fill: '#C8E64A', label: 'Funding', labelX: 0, labelY: -18 },
+    { id: 'investor', x: 490, y: 220, r: 10, fill: '#111827', label: 'VC / Angel', labelX: 15, labelY: 16 },
+    { id: 'mentor', x: 430, y: 340, r: 10, fill: '#6B7280', label: 'Mentors', labelX: 0, labelY: 20 },
+    { id: 'gov', x: 280, y: 370, r: 10, fill: '#C8E64A', label: 'Gov & Grants', labelX: 0, labelY: 20 },
+    { id: 'univ', x: 150, y: 330, r: 10, fill: '#6B7280', label: 'University', labelX: -10, labelY: 20 },
+    { id: 'accelerator', x: 110, y: 220, r: 10, fill: '#111827', label: 'Accelerator', labelX: -15, labelY: 16 },
+    { id: 'tech', x: 280, y: 70, r: 8, fill: '#9CA3AF', label: 'Tech Stack', labelX: 0, labelY: -14 },
+    { id: 'competitor', x: 400, y: 160, r: 8, fill: '#9CA3AF', label: 'Competitors', labelX: 15, labelY: -10 },
   ];
 
-  // Edge connections
+  // Edge connections mapping ecosystem graph relationships
   const edges = [
-    ['center', 'seed'], ['center', 'pricing'], ['center', 'atlas'],
-    ['center', 'meridian'], ['center', 'churn'], ['center', 'n1'],
-    ['center', 'n2'], ['center', 'n3'],
-    ['seed', 'n1'], ['n1', 'pricing'], ['pricing', 'n2'],
-    ['n2', 'meridian'], ['meridian', 'atlas'], ['atlas', 'churn'],
-    ['churn', 'n3'], ['n3', 'seed'],
+    ['startup', 'founder'], ['startup', 'funding'], ['startup', 'investor'],
+    ['startup', 'mentor'], ['startup', 'gov'], ['startup', 'univ'],
+    ['startup', 'accelerator'], ['startup', 'tech'], ['startup', 'competitor'],
+    ['funding', 'investor'], ['founder', 'univ'], ['accelerator', 'startup'],
+    ['gov', 'funding'], ['mentor', 'accelerator']
   ];
 
   const nodeMap = {};

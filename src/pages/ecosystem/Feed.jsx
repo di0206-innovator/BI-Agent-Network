@@ -165,14 +165,20 @@ export default function Feed({ user, founderProfile }) {
 
   const getPostTypeStyle = (type) => {
     switch (type) {
-      case 'milestone':
-        return 'bg-accent/20 border-[#C8E64A]/30 text-text-primary';
+      case 'ship':
+      case 'mvp':
       case 'launch':
-        return 'bg-accent/20 border-[#C8E64A]/30 text-text-primary';
-      case 'update':
-        return 'bg-hover border-light text-text-secondary';
+        return 'bg-accent/25 border-[#C8E64A]/40 text-text-primary font-black';
+      case 'revenue':
+      case 'funding':
+        return 'bg-green-500/15 border-green-500/30 text-green-600 font-black';
+      case 'interview':
+      case 'hiring':
+        return 'bg-blue-500/15 border-blue-500/30 text-blue-600 font-black';
+      case 'opensource':
+        return 'bg-purple-500/15 border-purple-500/30 text-purple-600 font-black';
       default:
-        return 'bg-hover border-light text-text-secondary';
+        return 'bg-hover border-light text-text-secondary font-bold';
     }
   };
 
@@ -247,52 +253,31 @@ export default function Feed({ user, founderProfile }) {
           )}
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            {/* Post Type Selector */}
+            {/* Execution Milestone Type Selector */}
             <div className="flex flex-wrap gap-2 select-none">
-              <button
-                type="button"
-                onClick={() => setPostType('post')}
-                className={`px-3 py-1.5 border font-outfit font-bold text-xs uppercase tracking-wider cursor-pointer transition-all rounded-lg ${
-                  postType === 'post' 
-                    ? 'bg-black border-black text-white shadow-sm' 
-                    : 'bg-card border-gray-250 text-text-secondary hover:border-DEFAULT'
-                }`}
-              >
-                Simple Post
-              </button>
-              <button
-                type="button"
-                onClick={() => setPostType('update')}
-                className={`px-3 py-1.5 border font-outfit font-bold text-xs uppercase tracking-wider cursor-pointer transition-all rounded-lg ${
-                  postType === 'update' 
-                    ? 'bg-accent border-transparent text-text-primary shadow-sm' 
-                    : 'bg-card border-gray-250 text-text-secondary hover:border-DEFAULT'
-                }`}
-              >
-                Progress Log
-              </button>
-              <button
-                type="button"
-                onClick={() => setPostType('milestone')}
-                className={`px-3 py-1.5 border font-outfit font-bold text-xs uppercase tracking-wider cursor-pointer transition-all rounded-lg ${
-                  postType === 'milestone' 
-                    ? 'bg-accent/25 border-transparent text-text-primary shadow-sm' 
-                    : 'bg-card border-gray-250 text-text-secondary hover:border-DEFAULT'
-                }`}
-              >
-                ★ Milestone (+15 Score)
-              </button>
-              <button
-                type="button"
-                onClick={() => setPostType('launch')}
-                className={`px-3 py-1.5 border font-outfit font-bold text-xs uppercase tracking-wider cursor-pointer transition-all rounded-lg ${
-                  postType === 'launch' 
-                    ? 'bg-accent border-transparent text-text-primary shadow-sm' 
-                    : 'bg-card border-gray-250 text-text-secondary hover:border-DEFAULT'
-                }`}
-              >
-                🚀 Product Launch
-              </button>
+              {[
+                { type: 'post', label: 'Simple Note' },
+                { type: 'ship', label: '📦 Product Ship' },
+                { type: 'interview', label: '🗣 Customer Interview' },
+                { type: 'mvp', label: '🚀 MVP Launch' },
+                { type: 'revenue', label: '💰 Revenue Milestone' },
+                { type: 'hiring', label: '👥 Team Hiring' },
+                { type: 'opensource', label: '⚡ Open Source' },
+                { type: 'funding', label: '🤝 Funding / Grant' },
+              ].map(t => (
+                <button
+                  key={t.type}
+                  type="button"
+                  onClick={() => setPostType(t.type)}
+                  className={`px-3 py-1.5 border font-outfit font-bold text-xs uppercase tracking-wider cursor-pointer transition-all rounded-lg ${
+                    postType === t.type 
+                      ? 'bg-accent border-transparent text-[#111] shadow-sm' 
+                      : 'bg-card border-gray-250 text-text-secondary hover:border-DEFAULT'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
             </div>
 
             <button

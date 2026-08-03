@@ -261,13 +261,35 @@ export default function Signals({ founderProfile, user, openAuthModal }) {
                       </div>
 
                       {/* Right: Content */}
-                      <div className="flex-1 space-y-2">
+                      <div className="flex-1 space-y-3">
                         <h3 className="font-outfit font-bold text-base md:text-lg text-text-primary uppercase tracking-tight leading-tight group-hover:underline">
                           {sig.title}
                         </h3>
                         <p className="text-xs md:text-sm font-semibold font-inter text-text-primary leading-relaxed font-light">
                           {sig.description}
                         </p>
+
+                        {/* Structured Intelligence Audit Breakdown */}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 select-text">
+                          <div className="bg-canvas border border-light p-2.5 rounded-lg text-xs">
+                            <span className="block text-[9px] font-black uppercase tracking-wider text-text-muted mb-0.5">💡 Why It Matters</span>
+                            <p className="text-text-secondary text-[11px] font-light leading-snug">
+                              {sig.whyItMatters || `Directly shifts competitive landscape in ${founderProfile?.industry || 'your sector'}.`}
+                            </p>
+                          </div>
+                          <div className="bg-canvas border border-light p-2.5 rounded-lg text-xs">
+                            <span className="block text-[9px] font-black uppercase tracking-wider text-text-muted mb-0.5">🎯 Ecosystem Impact</span>
+                            <p className="text-text-secondary text-[11px] font-light leading-snug">
+                              {sig.impactDetails || `${sig.impact || 'Medium'} influence on pricing dynamics and user acquisition.`}
+                            </p>
+                          </div>
+                          <div className="bg-accent/10 border border-[#C8E64A]/30 p-2.5 rounded-lg text-xs">
+                            <span className="block text-[9px] font-black uppercase tracking-wider text-text-primary mb-0.5">⚡ Recommended Action</span>
+                            <p className="text-text-primary text-[11px] font-semibold leading-snug">
+                              {sig.recommendedAction || 'Update hypothesis memory and stress-test value proposition wedge.'}
+                            </p>
+                          </div>
+                        </div>
 
                         {/* Source */}
                         {sig.source && (

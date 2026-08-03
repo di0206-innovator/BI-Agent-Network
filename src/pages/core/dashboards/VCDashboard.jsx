@@ -170,8 +170,44 @@ export default function VCDashboard({ founderProfile, user }) {
           </div>
         </div>
 
-        {/* Right Column: Trending & Pipeline */}
+        {/* Right Column: Trending, Heatmap & Pipeline */}
         <div className="lg:col-span-2 space-y-6">
+          {/* Sector Heatmap Widget */}
+          <div className="os-card bg-card p-5">
+            <div className="flex items-center justify-between mb-4 border-b border-light pb-2.5 select-none">
+              <div className="flex items-center gap-2">
+                <Activity size={16} className="text-text-muted" />
+                <h3 className="font-outfit font-bold text-sm text-text-primary uppercase tracking-wide">
+                  Ecosystem Sector Heatmap & Deal Activity
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono font-bold bg-accent/15 border border-[#C8E64A]/30 text-text-primary px-2 py-0.5 rounded">
+                LIVE TELEMETRY
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 select-none">
+              {[
+                { sector: 'AI & GenAI', count: 48, intensity: 'bg-accent text-[#111] font-black' },
+                { sector: 'B2B SaaS', count: 35, intensity: 'bg-[#1A1A1A] text-white font-bold' },
+                { sector: 'FinTech', count: 29, intensity: 'bg-hover border border-light text-text-primary font-bold' },
+                { sector: 'DeepTech', count: 18, intensity: 'bg-accent/30 text-text-primary font-bold' },
+                { sector: 'ClimateTech', count: 14, intensity: 'bg-hover border border-light text-text-secondary' },
+                { sector: 'HealthTech', count: 11, intensity: 'bg-hover border border-light text-text-muted' },
+              ].map(item => (
+                <button
+                  key={item.sector}
+                  onClick={() => setThesisKeyword(item.sector)}
+                  className={`p-3 rounded-lg flex flex-col justify-between text-left transition-transform hover:scale-105 cursor-pointer ${item.intensity}`}
+                >
+                  <span className="text-[9px] uppercase tracking-wider block opacity-80">{item.sector}</span>
+                  <span className="text-xl font-outfit font-black mt-2">{item.count} <span className="text-[9px] font-normal opacity-70">deals</span></span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Trending Deals */}
           <div className="os-card min-h-[400px] flex flex-col">
             <div className="flex items-center justify-between mb-6 pb-3 border-b border-light">
               <div className="flex items-center gap-2">
@@ -206,7 +242,7 @@ export default function VCDashboard({ founderProfile, user }) {
                       <span className="px-2 py-0.5 bg-hover border border-light text-text-secondary text-[9px] font-bold uppercase rounded-md">
                         {startup.industry}
                       </span>
-                      <span className="ml-auto px-2 py-0.5 bg-green-55/20 border border-green-255/35 text-green-500 text-[9px] font-bold uppercase rounded-md">
+                      <span className="ml-auto px-2 py-0.5 bg-green-500/10 border border-green-500/30 text-green-500 text-[9px] font-bold uppercase rounded-md">
                         {getMatchScore(startup)}% Match
                       </span>
                     </div>
