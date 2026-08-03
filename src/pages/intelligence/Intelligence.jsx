@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Trash2, Calendar, Lock, LogIn, AlertCircle, Compass, Shield, Globe, Copy, Check, RefreshCw } from 'lucide-react';
+import { 
+  FileText, Trash2, Calendar, Lock, LogIn, AlertCircle, Compass, Shield, 
+  Globe, Copy, Check, RefreshCw, Plus, Sparkles, X, Zap, Search 
+} from 'lucide-react';
 import Toast from '../../components/Toast';
 import confetti from 'canvas-confetti';
 import { supabase } from '../../lib/supabase';
@@ -11,6 +14,12 @@ export default function Intelligence({ user, setUser, openAuthModal, founderProf
   const [reports, setReports] = useState([]);
   const [loadingReports, setLoadingReports] = useState(true);
   const [reportsError, setReportsError] = useState(null);
+
+  // Modal States
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [reportQuery, setReportQuery] = useState('');
+  const [reportType, setReportType] = useState('STRATEGY');
+  const [generatingReport, setGeneratingReport] = useState(false);
 
   // Pitch Brief states
   const [briefId, setBriefId] = useState('');
@@ -136,6 +145,55 @@ export default function Intelligence({ user, setUser, openAuthModal, founderProf
     }
   };
 
+  const handleCreateReport = async (e) => {
+    e.preventDefault();
+    if (!reportQuery.trim()) return;
+
+    setGeneratingReport(true);
+    try {
+      const res = await fetch('/api/reports', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: reportQuery.trim(),
+          sources: ['web', 'wikipedia', 'sec'],
+          founderProfile: founderProfile || {
+            name: myStartup?.name || 'My Startup',
+            industry: myStartup?.industry || 'Technology',
+            geography: myStartup?.geography || 'Global',
+            product: myStartup?.pitch || reportQuery,
+            stage: myStartup?.stage || 'idea'
+          },
+          reportOptions: {
+            reportType
+          }
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setShowCreateModal(false);
+        setReportQuery('');
+        setToast({ message: 'Strategic report compiled successfully! ✓', type: 'success' });
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.5 },
+          colors: ['#C8E64A', '#1A1A1A', '#FAF9F6']
+        });
+        await fetchReports();
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        setToast({ message: errData.error?.message || 'Failed to generate strategic report.', type: 'error' });
+      }
+    } catch (err) {
+      console.error('Error generating report:', err);
+      setToast({ message: 'Network error generating report.', type: 'error' });
+    } finally {
+      setGeneratingReport(false);
+    }
+  };
+
   const handleSaveBrief = async (e) => {
     e.preventDefault();
     setSavingBrief(true);
@@ -183,7 +241,6 @@ export default function Intelligence({ user, setUser, openAuthModal, founderProf
     }
   };
 
-
   const copyLink = () => {
     const link = `${window.location.origin}/brief/${briefId}`;
     navigator.clipboard.writeText(link);
@@ -202,19 +259,25 @@ export default function Intelligence({ user, setUser, openAuthModal, founderProf
           <div>
             <h1 className="text-2xl sm:text-3xl font-outfit font-black tracking-tight">Intelligence & Pitch Briefs</h1>
             <p className="font-inter text-text-secondary mt-1 text-xs sm:text-sm">
-              Manage your AI strategic reports and configure your whitelisted investor data room.
+              Compile AI strategic reports and configure your whitelisted investor data room directly here.
             </p>
           </div>
         </div>
 
         {user && (
           <div className="flex items-center gap-3 self-start md:self-auto select-none">
-            <span className="text-xs font-semibold border border-light rounded-lg px-3 py-1.5 bg-card shadow-sm">
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="os-btn-primary flex items-center gap-1.5 text-xs py-2 px-4 shadow-sm"
+            >
+              <Plus size={16} /> + Strategic Report
+            </button>
+            <span className="text-xs font-semibold border border-light rounded-lg px-3 py-2 bg-card shadow-sm">
               {user.username || user.email}
             </span>
             <button
               onClick={handleLogout}
-              className="os-btn py-1.5"
+              className="os-btn py-2"
             >
               Sign Out
             </button>
@@ -288,28 +351,39 @@ export default function Intelligence({ user, setUser, openAuthModal, founderProf
             );
           })()}
 
-          {/* Tab Navigation */}
-          <div className="flex border-b border-light select-none">
-            <button
-              onClick={() => setActiveTab('insights')}
-              className={`px-5 py-3 font-outfit font-bold text-xs sm:text-sm uppercase tracking-wider cursor-pointer border-b-2 transition-all ${
-                activeTab === 'insights'
-                  ? 'border-black text-text-primary'
-                  : 'border-transparent text-text-muted hover:text-text-primary'
-              }`}
-            >
-              Strategic Reports
-            </button>
-            <button
-              onClick={() => setActiveTab('dataroom')}
-              className={`px-5 py-3 font-outfit font-bold text-xs sm:text-sm uppercase tracking-wider cursor-pointer border-b-2 transition-all ${
-                activeTab === 'dataroom'
-                  ? 'border-black text-text-primary'
-                  : 'border-transparent text-text-muted hover:text-text-primary'
-              }`}
-            >
-              Investor Data Room
-            </button>
+          {/* Tab Navigation & Inline Action */}
+          <div className="flex items-center justify-between border-b border-light select-none">
+            <div className="flex">
+              <button
+                onClick={() => setActiveTab('insights')}
+                className={`px-5 py-3 font-outfit font-bold text-xs sm:text-sm uppercase tracking-wider cursor-pointer border-b-2 transition-all ${
+                  activeTab === 'insights'
+                    ? 'border-black text-text-primary'
+                    : 'border-transparent text-text-muted hover:text-text-primary'
+                }`}
+              >
+                Strategic Reports ({reports.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('dataroom')}
+                className={`px-5 py-3 font-outfit font-bold text-xs sm:text-sm uppercase tracking-wider cursor-pointer border-b-2 transition-all ${
+                  activeTab === 'dataroom'
+                    ? 'border-black text-text-primary'
+                    : 'border-transparent text-text-muted hover:text-text-primary'
+                }`}
+              >
+                Investor Data Room
+              </button>
+            </div>
+
+            {activeTab === 'insights' && (
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="os-btn-primary flex items-center gap-1.5 text-xs py-1.5 px-3 mb-2"
+              >
+                <Plus size={14} /> Create Report
+              </button>
+            )}
           </div>
 
           {/* Tab Content */}
@@ -334,11 +408,14 @@ export default function Intelligence({ user, setUser, openAuthModal, founderProf
                   <Compass size={36} className="mx-auto text-gray-300" />
                   <span className="font-outfit font-bold uppercase text-xs tracking-wider">No briefs compiled yet</span>
                   <p className="text-xs text-text-secondary max-w-xs mx-auto leading-relaxed">
-                    Head over to the OS Dashboard to define your wedge and trigger your first multi-agent strategy simulation.
+                    Trigger your first multi-agent strategy simulation right here without leaving this page.
                   </p>
-                  <Link to="/dashboard" className="os-btn-primary inline-flex mt-2">
-                    Go to Dashboard
-                  </Link>
+                  <button 
+                    onClick={() => setShowCreateModal(true)} 
+                    className="os-btn-primary inline-flex items-center gap-1.5 mt-2"
+                  >
+                    <Plus size={16} /> Compile Strategic Report Here
+                  </button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -362,7 +439,7 @@ export default function Intelligence({ user, setUser, openAuthModal, founderProf
                               {formattedDate}
                             </span>
                             <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold border border-[#C8E64A]/40 bg-accent/10 text-text-primary">
-                              {report.reportType || 'IDEA'}
+                              {report.reportType || 'STRATEGY'}
                             </span>
                           </div>
 
@@ -541,6 +618,115 @@ export default function Intelligence({ user, setUser, openAuthModal, founderProf
           )}
         </div>
       )}
+
+      {/* Inline Strategic Report Creator Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-card border border-light w-full max-w-xl rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 relative animate-slide-up">
+            <button
+              onClick={() => setShowCreateModal(false)}
+              className="absolute top-5 right-5 p-2 text-text-muted hover:text-text-primary rounded-full hover:bg-hover transition-colors"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-accent/20 border border-[#C8E64A]/30 flex items-center justify-center text-text-primary">
+                <Sparkles size={20} />
+              </div>
+              <div>
+                <h3 className="font-outfit font-black text-xl text-text-primary uppercase tracking-tight">Compile Strategic Report</h3>
+                <p className="text-xs text-text-secondary font-medium">Multi-agent intelligence analysis grounded in web, patent, & market data.</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleCreateReport} className="space-y-5">
+              <div>
+                <label className="block text-xs font-bold uppercase text-text-secondary mb-2 tracking-wide">
+                  Strategic Inquiry / Focus Topic
+                </label>
+                <textarea
+                  value={reportQuery}
+                  onChange={(e) => setReportQuery(e.target.value)}
+                  placeholder="e.g. Audit defensible wedge & pricing strategy for B2B SaaS in developer tools..."
+                  rows={3}
+                  required
+                  className="os-input resize-none"
+                />
+              </div>
+
+              {/* Preset Topic Chips */}
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-bold uppercase text-text-muted tracking-wider block">Suggested Preset Topics:</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    '🎯 Audit GTM Positioning & Pricing Model',
+                    '⚡ Evaluate Product Defensibility & Wedge',
+                    '👀 Competitor Landscape Analysis',
+                    '🤝 VC Pitch Memo & Diligence Audit'
+                  ].map((preset, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setReportQuery(preset.replace(/^[^\w]+/, ''))}
+                      className="px-2.5 py-1 text-[10px] font-semibold bg-canvas hover:bg-accent/20 border border-light rounded-lg transition-colors text-text-secondary hover:text-text-primary text-left"
+                    >
+                      {preset}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase text-text-secondary mb-2 tracking-wide">
+                    Report Type
+                  </label>
+                  <select
+                    value={reportType}
+                    onChange={(e) => setReportType(e.target.value)}
+                    className="os-input"
+                  >
+                    <option value="STRATEGY">Strategic Brief</option>
+                    <option value="DILIGENCE">VC Due Diligence</option>
+                    <option value="COMPETITOR">Competitor Audit</option>
+                    <option value="IDEA">Idea Validation</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase text-text-secondary mb-2 tracking-wide">
+                    Grounding Sources
+                  </label>
+                  <div className="px-3 py-2 bg-canvas border border-light rounded-lg text-xs font-bold text-text-primary flex items-center justify-between">
+                    <span>Web + Wikipedia + SEC</span>
+                    <Check size={14} className="text-green-500" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-light flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal(false)}
+                  className="os-btn py-2.5 px-4 text-xs font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={generatingReport || !reportQuery.trim()}
+                  className="os-btn-primary py-2.5 px-6 text-xs font-semibold flex items-center gap-2"
+                >
+                  {generatingReport ? <RefreshCw size={14} className="animate-spin" /> : <Zap size={14} />}
+                  <span>{generatingReport ? 'Compiling AI Report...' : 'Generate Report'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
